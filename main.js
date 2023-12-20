@@ -130,7 +130,51 @@ function get_next_shortest_node(start, end) {
 
   return shortest.elem;
 }
+// ... (your existing code)
 
+let graph = new Graph(); // Create an instance of the graph
+
+// ... (your existing code)
+
+function init() {
+  draw_grid(grid_size_x, grid_size_y);
+  grid.addEventListener("wheel", scroll_handler);
+
+  // Add edges to the graph based on the grid layout
+  populateGraph();
+}
+
+function populateGraph() {
+  for (let i = 0; i < grid_size_x; i++) {
+    for (let j = 0; j < grid_size_y; j++) {
+      if (i > 0) {
+        graph.add_edge(grid_matrix[i][j], grid_matrix[i - 1][j], 1, 1);
+        if (j > 0) {
+          graph.add_edge(grid_matrix[i][j], grid_matrix[i - 1][j - 1], 1.4, 1);
+        }
+        if (j < grid_size_y - 1) {
+          graph.add_edge(grid_matrix[i][j], grid_matrix[i - 1][j + 1], 1.4, 1);
+        }
+      }
+
+      if (j > 0) {
+        graph.add_edge(grid_matrix[i][j], grid_matrix[i][j - 1], 1, 1);
+      }
+    }
+  }
+}
+
+function shortest_path(start, end, max = Infinity) {
+  let startNode = grid_matrix[start.dataset.i][start.dataset.j];
+  let endNode = grid_matrix[end.dataset.i][end.dataset.j];
+  let path = dijkstra(graph, startNode, endNode, 1); // Use the speed modifier here
+
+  return path.slice(0, max);
+}
+
+// ... (rest of your code)
+
+init();
 function scroll_handler(event) {
   event.preventDefault();
 
